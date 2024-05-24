@@ -3,11 +3,12 @@ import './App.css';
 
 function App() {
   const [taskInput, setTaskInput] = useState("")
-  const [status, setStatus] = useState(false)
+  const [completeStatus, setCompleteStatus] = useState(false)
   const [task, setTask] = useState([])
   const addTask = (e) =>{
     e.preventDefault()
-    const newArr = [...task, taskInput]
+    const newArr = [...task, {text:taskInput,status:completeStatus, id:Date.now()}]
+
     setTask(newArr)
     setTaskInput("")
   }
@@ -15,6 +16,10 @@ function App() {
   const handleInputChange = (e) =>{
     setTaskInput(e.target.value)
   }
+  const deleteHandler = (i) => {
+    const newTask = task.filter((t) => i!== t.id);
+    setTask(newTask);
+  };
   
   return (
     <div className="App">
@@ -27,13 +32,13 @@ function App() {
         placeholder="Add a new task"
       />
       <button type="submit">Add Task</button>
-    </form>
+    </form >
     <ul>
-      {task.map((tasks, index) => (
-        <li key={index} className="">
-          <span >{tasks}</span>
-          <button>Remove</button>
-        </li>
+      {task.map((tasks) => (
+        <li key={tasks.id}  className={tasks.status?"complete":""}>
+          <div onClick={()=>setCompleteStatus(!completeStatus)} >{tasks.text}</div>
+          <button onClick={()=>deleteHandler(tasks.id)}>Remove</button>
+        </li> 
       ))}
     </ul>
   </div>
