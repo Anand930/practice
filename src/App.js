@@ -3,11 +3,10 @@ import './App.css';
 
 function App() {
   const [taskInput, setTaskInput] = useState("")
-  const [completeStatus, setCompleteStatus] = useState(false)
   const [task, setTask] = useState([])
   const addTask = (e) =>{
     e.preventDefault()
-    const newArr = [...task, {text:taskInput,status:completeStatus, id:Date.now()}]
+    const newArr = [...task, {text:taskInput,status:false, id:Date.now()}]
 
     setTask(newArr)
     setTaskInput("")
@@ -20,6 +19,13 @@ function App() {
     const newTask = task.filter((t) => i!== t.id);
     setTask(newTask);
   };
+
+  const toggleTasks = (id) =>{
+    const newTask = task.map((tasks)=>(
+      tasks.id===id?{...tasks, status:!tasks.status}:tasks
+    ))
+    setTask(newTask)
+  }
   
   return (
     <div className="App">
@@ -35,8 +41,8 @@ function App() {
     </form >
     <ul>
       {task.map((tasks) => (
-        <li key={tasks.id}  className={tasks.status?"complete":""}>
-          <div onClick={()=>setCompleteStatus(!completeStatus)} >{tasks.text}</div>
+        <li key={tasks.id}  >
+          <div className={tasks.status?"complete":"tasks"} onClick={()=>toggleTasks(tasks.id)} >{tasks.text}</div>
           <button onClick={()=>deleteHandler(tasks.id)}>Remove</button>
         </li> 
       ))}
